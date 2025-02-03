@@ -1,0 +1,165 @@
+"use client"
+
+import { useState } from "react"
+import { Search } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+
+export default function ExamFinder() {
+  const [teacherSearch, setTeacherSearch] = useState("")
+  const [moduleSearch, setModuleSearch] = useState("")
+  const [selectedExamTypes, setSelectedExamTypes] = useState({
+    finalExam: false,
+    semiExam: false,
+  })
+
+  // Sample data - replace with your actual data
+  const teachers = [
+    "Dr. Smith",
+    "Prof. Johnson",
+    "Dr. Williams",
+    "Prof. Brown",
+    "Dr. Davis",
+    "Dr. Miller",
+    "Prof. Wilson",
+    "Dr. Moore",
+    "Prof. Taylor",
+    "Dr. Anderson",
+  ]
+
+  const modules = [
+    "Mathematics",
+    "Physics",
+    "Computer Science",
+    "Chemistry",
+    "Biology",
+    "Statistics",
+    "Data Structures",
+    "Algorithms",
+    "Database Systems",
+    "Operating Systems",
+  ]
+
+  // Filter functions
+  const filteredTeachers = teachers.filter((teacher) => teacher.toLowerCase().includes(teacherSearch.toLowerCase()))
+
+  const filteredModules = modules.filter((module) => module.toLowerCase().includes(moduleSearch.toLowerCase()))
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <Card className="mx-auto max-w-2xl p-6">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-900">Exam Finder</h1>
+          <p className="mt-2 text-gray-600">Find past exams and semi-exams by teacher and module</p>
+        </div>
+
+        <form className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Teacher Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="teacher">Select Teacher</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a teacher" />
+                </SelectTrigger>
+                <SelectContent>
+                  <div className="p-2">
+                    <Input
+                      placeholder="Search teachers..."
+                      value={teacherSearch}
+                      onChange={(e) => setTeacherSearch(e.target.value)}
+                      className="mb-2"
+                    />
+                  </div>
+                  <div className="max-h-[200px] overflow-y-auto">
+                    {filteredTeachers.map((teacher) => (
+                      <SelectItem key={teacher} value={teacher.toLowerCase()}>
+                        {teacher}
+                      </SelectItem>
+                    ))}
+                  </div>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Module Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="module">Select Module</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a module" />
+                </SelectTrigger>
+                <SelectContent>
+                  <div className="p-2">
+                    <Input
+                      placeholder="Search modules..."
+                      value={moduleSearch}
+                      onChange={(e) => setModuleSearch(e.target.value)}
+                      className="mb-2"
+                    />
+                  </div>
+                  <div className="max-h-[200px] overflow-y-auto">
+                    {filteredModules.map((module) => (
+                      <SelectItem key={module} value={module.toLowerCase()}>
+                        {module}
+                      </SelectItem>
+                    ))}
+                  </div>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Exam Type Selection */}
+          <div className="space-y-3">
+            <Label>Exam Type</Label>
+            <div className="flex space-x-6">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="finalExam"
+                  checked={selectedExamTypes.finalExam}
+                  onCheckedChange={(checked) => setSelectedExamTypes((prev) => ({ ...prev, finalExam: checked }))}
+                />
+                <Label
+                  htmlFor="finalExam"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Final Exams
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="semiExam"
+                  checked={selectedExamTypes.semiExam}
+                  onCheckedChange={(checked) => setSelectedExamTypes((prev) => ({ ...prev, semiExam: checked }))}
+                />
+                <Label
+                  htmlFor="semiExam"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Semi Exams
+                </Label>
+              </div>
+            </div>
+          </div>
+
+          {/* Search Button */}
+          <Button className="w-full" size="lg" disabled={!selectedExamTypes.finalExam && !selectedExamTypes.semiExam}>
+            <Search className="mr-2 h-4 w-4" />
+            Search Exams
+          </Button>
+        </form>
+
+        {/* Results Preview Section */}
+        <div className="mt-8 rounded-lg border border-dashed border-gray-300 p-4">
+          <p className="text-center text-gray-500">Your search results will appear here</p>
+        </div>
+      </Card>
+    </div>
+  )
+}
+
